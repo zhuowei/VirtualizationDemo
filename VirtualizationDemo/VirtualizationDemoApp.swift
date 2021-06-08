@@ -23,11 +23,12 @@ struct VirtualizationDemoOptions : ParsableCommand {
     @Option
     var memorySizeMegabytes:UInt64 = 1024
     func run() {
-        runIt(options: self)
-        CFRunLoopRun()
-        //VirtualizationDemoApp.main()
+        gOptions = self
+        VirtualizationDemoApp.main()
     }
 }
+
+var gOptions:VirtualizationDemoOptions!
 
 struct VirtualizationDemoApp: App {
     var body: some Scene {
