@@ -37,7 +37,11 @@ func createMachineConfig(options: VirtualizationDemoOptions) -> VZVirtualMachine
     }
 
     // Graphics requires a separate entitlement!
-    // Comment out if you don't have amfi_get_out_of_my_way
+    // For some reason Xcode's letting me sign with com.apple.private.virtualization?
+    // Note: this panics the kernel when running in VMWare Fusion
+    // probably since there's no Metal acceleration
+    // so comment out if you're doing nested virtualization
+    // the keyboard works fine.
     let graphics = VZMacGraphicsDeviceConfiguration()
     graphics.displays = [VZMacGraphicsDisplayConfiguration(widthInPixels: 1024, heightInPixels: 768, pixelsPerInch: 72)]
     vmConfig.graphicsDevices = [graphics]
