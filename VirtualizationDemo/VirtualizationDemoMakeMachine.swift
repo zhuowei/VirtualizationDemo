@@ -25,7 +25,7 @@ func createMachineConfig(options: VirtualizationDemoOptions) -> VZVirtualMachine
         if let linuxRamdisk = options.linuxRamdisk {
             bootloader.initialRamdiskURL = URL(fileURLWithPath: linuxRamdisk)
         }
-        bootloader.commandLine = "console=hvc0 serial"
+        bootloader.commandLine = options.linuxCmdline
         vmConfig.bootLoader = bootloader
     }
     let serialPort = VZVirtioConsoleDeviceSerialPortConfiguration()
@@ -35,9 +35,11 @@ func createMachineConfig(options: VirtualizationDemoOptions) -> VZVirtualMachine
         let virtioBlockDevice = VZVirtioBlockDeviceConfiguration(attachment: try! VZDiskImageStorageDeviceAttachment(url: URL(fileURLWithPath: disk), readOnly: true))
         vmConfig.storageDevices = [virtioBlockDevice]
     }
+/*
     let graphics = VZMacGraphicsDeviceConfiguration()
     graphics.displays = [VZMacGraphicsDisplayConfiguration(widthInPixels: 1024, heightInPixels: 768, pixelsPerInch: 72)]
     vmConfig.graphicsDevices = [graphics]
+*/
     let keyboard = VZUSBKeyboardConfiguration()
     vmConfig.keyboards = [keyboard]
     let usbTablet = VZUSBScreenCoordinatePointingDeviceConfiguration()

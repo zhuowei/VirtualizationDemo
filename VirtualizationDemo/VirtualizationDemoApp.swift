@@ -17,7 +17,7 @@ struct VirtualizationDemoOptions : ParsableCommand {
     @Option
     var linuxRamdisk:String?
     @Option
-    var linuxCmdline:String?
+    var linuxCmdline:String = "console=hvc0 serial"
     @Option
     var disk:String?
     @Option
