@@ -6,8 +6,29 @@
 //
 
 import SwiftUI
+import ArgumentParser
 
 @main
+struct VirtualizationDemoOptions : ParsableCommand {
+    @Option(name: .customLong("NSDocumentRevisionsDebugMode", withSingleDash: true))
+    var unusedForXcode:String?
+    @Option
+    var linuxKernel:String?
+    @Option
+    var linuxRamdisk:String?
+    @Option
+    var linuxCmdline:String?
+    @Option
+    var disk:String?
+    @Option
+    var memorySizeMegabytes:UInt64 = 1024
+    func run() {
+        runIt(options: self)
+        CFRunLoopRun()
+        //VirtualizationDemoApp.main()
+    }
+}
+
 struct VirtualizationDemoApp: App {
     var body: some Scene {
         WindowGroup {

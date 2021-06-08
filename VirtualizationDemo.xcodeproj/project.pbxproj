@@ -11,6 +11,8 @@
 		C503504E266EC0FA0099805C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C503504D266EC0FA0099805C /* ContentView.swift */; };
 		C5035050266EC0FC0099805C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C503504F266EC0FC0099805C /* Assets.xcassets */; };
 		C5035053266EC0FC0099805C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5035052266EC0FC0099805C /* Preview Assets.xcassets */; };
+		C54F9332266EF76D00A1C8CC /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = C54F9331266EF76D00A1C8CC /* ArgumentParser */; };
+		C54F9334266EFAD900A1C8CC /* VirtualizationDemoMakeMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54F9333266EFAD900A1C8CC /* VirtualizationDemoMakeMachine.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +21,8 @@
 		C503504D266EC0FA0099805C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C503504F266EC0FC0099805C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C5035052266EC0FC0099805C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		C54F9333266EFAD900A1C8CC /* VirtualizationDemoMakeMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualizationDemoMakeMachine.swift; sourceTree = "<group>"; };
+		C54F9335266EFE5600A1C8CC /* VirtualizationDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VirtualizationDemo.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -26,6 +30,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C54F9332266EF76D00A1C8CC /* ArgumentParser in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -51,7 +56,9 @@
 		C503504A266EC0FA0099805C /* VirtualizationDemo */ = {
 			isa = PBXGroup;
 			children = (
+				C54F9335266EFE5600A1C8CC /* VirtualizationDemo.entitlements */,
 				C503504B266EC0FA0099805C /* VirtualizationDemoApp.swift */,
+				C54F9333266EFAD900A1C8CC /* VirtualizationDemoMakeMachine.swift */,
 				C503504D266EC0FA0099805C /* ContentView.swift */,
 				C503504F266EC0FC0099805C /* Assets.xcassets */,
 				C5035051266EC0FC0099805C /* Preview Content */,
@@ -83,6 +90,9 @@
 			dependencies = (
 			);
 			name = VirtualizationDemo;
+			packageProductDependencies = (
+				C54F9331266EF76D00A1C8CC /* ArgumentParser */,
+			);
 			productName = VirtualizationDemo;
 			productReference = C5035048266EC0FA0099805C /* VirtualizationDemo.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +121,9 @@
 				Base,
 			);
 			mainGroup = C503503F266EC0FA0099805C;
+			packageReferences = (
+				C54F9330266EF76D00A1C8CC /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
+			);
 			productRefGroup = C5035049266EC0FA0099805C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -138,6 +151,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C503504E266EC0FA0099805C /* ContentView.swift in Sources */,
+				C54F9334266EFAD900A1C8CC /* VirtualizationDemoMakeMachine.swift in Sources */,
 				C503504C266EC0FA0099805C /* VirtualizationDemoApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -265,12 +279,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = VirtualizationDemo/VirtualizationDemo.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"VirtualizationDemo/Preview Content\"";
 				DEVELOPMENT_TEAM = 3D7RY4393N;
-				ENABLE_APP_SANDBOX = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
@@ -294,12 +310,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = VirtualizationDemo/VirtualizationDemo.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"VirtualizationDemo/Preview Content\"";
 				DEVELOPMENT_TEAM = 3D7RY4393N;
-				ENABLE_APP_SANDBOX = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
@@ -340,6 +358,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C54F9330266EF76D00A1C8CC /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C54F9331266EF76D00A1C8CC /* ArgumentParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C54F9330266EF76D00A1C8CC /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
+			productName = ArgumentParser;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C5035040266EC0FA0099805C /* Project object */;
 }
