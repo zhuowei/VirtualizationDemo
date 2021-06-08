@@ -35,11 +35,14 @@ func createMachineConfig(options: VirtualizationDemoOptions) -> VZVirtualMachine
         let virtioBlockDevice = VZVirtioBlockDeviceConfiguration(attachment: try! VZDiskImageStorageDeviceAttachment(url: URL(fileURLWithPath: disk), readOnly: true))
         vmConfig.storageDevices = [virtioBlockDevice]
     }
-/*
+
+    // Graphics requires a separate entitlement!
+    // Comment out if you don't have amfi_get_out_of_my_way
     let graphics = VZMacGraphicsDeviceConfiguration()
     graphics.displays = [VZMacGraphicsDisplayConfiguration(widthInPixels: 1024, heightInPixels: 768, pixelsPerInch: 72)]
     vmConfig.graphicsDevices = [graphics]
-*/
+    // end comment out
+
     let keyboard = VZUSBKeyboardConfiguration()
     vmConfig.keyboards = [keyboard]
     let usbTablet = VZUSBScreenCoordinatePointingDeviceConfiguration()
