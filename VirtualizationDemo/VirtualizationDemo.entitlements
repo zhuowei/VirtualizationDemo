@@ -4,7 +4,5 @@
 <dict>
 	<key>com.apple.security.virtualization</key>
 	<true/>
-    <key>com.apple.private.virtualization</key>
-    <true/>
 </dict>
 </plist>

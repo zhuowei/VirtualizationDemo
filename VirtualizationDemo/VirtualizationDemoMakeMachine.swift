@@ -28,6 +28,45 @@ func createMachineConfig(options: VirtualizationDemoOptions) -> VZVirtualMachine
         bootloader.commandLine = options.linuxCmdline
         vmConfig.bootLoader = bootloader
     }
+    #if arch(arm64)
+    if let appleModel = options.appleModel {
+        // TODO(zhuowei): actually add some params into this
+        let platform = VZMacPlatformConfiguration()
+        let modelPlist:[String: Any] = [
+            "DataRepresentationVersion": 1,
+            "MinimumSupportedOS": [12, 0, 0],
+            "PlatformVersion": appleModel,
+        ]
+        let modelData = try! PropertyListSerialization.data(fromPropertyList: modelPlist, format: .binary, options: 0)
+        let model = VZMacHardwareModel(dataRepresentation: modelData)!
+        platform.hardwareModel = model
+        if let appleNVRAM = options.appleNVRAM {
+            var auxStorage:VZMacAuxiliaryStorage!
+            if FileManager.default.fileExists(atPath: appleNVRAM) {
+                auxStorage = VZMacAuxiliaryStorage(contentsOf: URL(fileURLWithPath: appleNVRAM))
+            } else {
+                auxStorage = try! VZMacAuxiliaryStorage(creatingStorageAt: URL(fileURLWithPath: appleNVRAM), hardwareModel: model, options: [])
+            }
+            platform.auxiliaryStorage = auxStorage
+        }
+        if let appleECID = options.appleECID {
+            let ecidPlist:[String: Any] = [
+                "ECID": UInt64(appleECID, radix: 16)!,
+            ]
+            let ecidData = try! PropertyListSerialization.data(fromPropertyList: ecidPlist, format: .binary, options: 0)
+            platform.machineIdentifier = VZMacMachineIdentifier(dataRepresentation: ecidData)!
+        }
+        if options.appleTurnOffProduction {
+            platform.setValue(false, forKey: "_productionModeEnabled")
+        }
+        vmConfig.platform = platform
+        let bootloader = VZMacOSBootLoader()
+        if let appleROM = options.appleROM {
+            bootloader.setValue(URL(fileURLWithPath: appleROM), forKey: "_romURL")
+        }
+        vmConfig.bootLoader = bootloader
+    }
+    #endif
     let serialPort = VZVirtioConsoleDeviceSerialPortConfiguration()
     serialPort.attachment = VZFileHandleSerialPortAttachment(fileHandleForReading: .standardInput, fileHandleForWriting: .standardOutput)
     vmConfig.serialPorts = [serialPort]
@@ -35,16 +74,23 @@ func createMachineConfig(options: VirtualizationDemoOptions) -> VZVirtualMachine
         let virtioBlockDevice = VZVirtioBlockDeviceConfiguration(attachment: try! VZDiskImageStorageDeviceAttachment(url: URL(fileURLWithPath: disk), readOnly: true))
         vmConfig.storageDevices = [virtioBlockDevice]
     }
+    if options.addEntropyDevice {
+        let entropyDevice = VZVirtioEntropyDeviceConfiguration()
+        vmConfig.entropyDevices = [entropyDevice]
+    }
 
-    // Graphics requires a separate entitlement!
+    // Graphics requires a separate entitlement on Intel!
     // For some reason Xcode's letting me sign with com.apple.private.virtualization?
+    // It's fine on Apple Silicon;
     // Note: this panics the kernel when running in VMWare Fusion
     // probably since there's no Metal acceleration
     // so comment out if you're doing nested virtualization
     // the keyboard works fine.
-    let graphics = VZMacGraphicsDeviceConfiguration()
-    graphics.displays = [VZMacGraphicsDisplayConfiguration(widthInPixels: 1024, heightInPixels: 768, pixelsPerInch: 72)]
-    vmConfig.graphicsDevices = [graphics]
+    if options.addGraphics {
+        let graphics = VZMacGraphicsDeviceConfiguration()
+        graphics.displays = [VZMacGraphicsDisplayConfiguration(widthInPixels: 1024, heightInPixels: 768, pixelsPerInch: 72)]
+        vmConfig.graphicsDevices = [graphics]
+    }
     // end comment out
 
     let keyboard = VZUSBKeyboardConfiguration()
