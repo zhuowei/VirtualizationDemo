@@ -48,6 +48,8 @@ struct VirtualizationDemoOptions : ParsableCommand {
     var disk:String?
     @Option
     var memorySizeMegabytes:UInt64 = 1024
+    @Option
+    var ipswPath:String?
     // Might be needed for Fedora aarch64?
     // https://github.com/coreos/fedora-coreos-tracker/issues/431
     @Flag

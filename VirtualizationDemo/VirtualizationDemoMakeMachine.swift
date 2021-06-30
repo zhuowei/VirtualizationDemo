@@ -28,6 +28,7 @@ func createMachineConfig(options: VirtualizationDemoOptions) -> VZVirtualMachine
         bootloader.commandLine = options.linuxCmdline
         vmConfig.bootLoader = bootloader
     }
+    vmConfig.cpuCount = 4
     #if arch(arm64)
     if let appleModel = options.appleModel {
         // TODO(zhuowei): actually add some params into this
@@ -60,18 +61,21 @@ func createMachineConfig(options: VirtualizationDemoOptions) -> VZVirtualMachine
             platform.setValue(false, forKey: "_productionModeEnabled")
         }
         vmConfig.platform = platform
-        let bootloader = VZMacOSBootLoader()
-        if let appleROM = options.appleROM {
-            bootloader.setValue(URL(fileURLWithPath: appleROM), forKey: "_romURL")
+        // If we have a Linux bootloader, that takes presidence
+        if options.linuxKernel == nil {
+            let bootloader = VZMacOSBootLoader()
+            if let appleROM = options.appleROM {
+                bootloader.setValue(URL(fileURLWithPath: appleROM), forKey: "_romURL")
+            }
+            vmConfig.bootLoader = bootloader
         }
-        vmConfig.bootLoader = bootloader
     }
     #endif
     let serialPort = VZVirtioConsoleDeviceSerialPortConfiguration()
     serialPort.attachment = VZFileHandleSerialPortAttachment(fileHandleForReading: .standardInput, fileHandleForWriting: .standardOutput)
     vmConfig.serialPorts = [serialPort]
     if let disk = options.disk {
-        let virtioBlockDevice = VZVirtioBlockDeviceConfiguration(attachment: try! VZDiskImageStorageDeviceAttachment(url: URL(fileURLWithPath: disk), readOnly: true))
+        let virtioBlockDevice = VZVirtioBlockDeviceConfiguration(attachment: try! VZDiskImageStorageDeviceAttachment(url: URL(fileURLWithPath: disk), readOnly: false))
         vmConfig.storageDevices = [virtioBlockDevice]
     }
     if options.addEntropyDevice {
@@ -97,10 +101,33 @@ func createMachineConfig(options: VirtualizationDemoOptions) -> VZVirtualMachine
     vmConfig.keyboards = [keyboard]
     let usbTablet = VZUSBScreenCoordinatePointingDeviceConfiguration()
     vmConfig.pointingDevices = [usbTablet]
+    let network = VZNATNetworkDeviceAttachment()
+    let networkDevice = VZVirtioNetworkDeviceConfiguration()
+    networkDevice.attachment = network
+    vmConfig.networkDevices = [networkDevice]
     return vmConfig
 }
 
 let standardDelegate = VMDelegate()
+
+func startInstall(virtualMachine: VZVirtualMachine, ipswPath: String) {
+    #if arch(arm64)
+    print(URL(fileURLWithPath: ipswPath))
+    VZMacOSRestoreImage.load(from: URL(fileURLWithPath: ipswPath)) {
+        result in
+        print("result!!!")
+        guard case .success(let restoreImage) = result else {
+            print("no restore image!!!")
+            return
+        }
+        print(restoreImage)
+        let installer = VZMacOSInstaller(virtualMachine: virtualMachine, restoreImage: restoreImage)
+        installer.install() { error in
+            print(error)
+        }
+    }
+    #endif
+}
 
 func runIt(options: VirtualizationDemoOptions) -> VZVirtualMachine {
     let vmConfig = createMachineConfig(options: options)
@@ -108,6 +135,9 @@ func runIt(options: VirtualizationDemoOptions) -> VZVirtualMachine {
     vm.delegate = standardDelegate
     vm.start() { error in
         print(error)
+        if let ipswPath = options.ipswPath {
+            startInstall(virtualMachine: vm, ipswPath: ipswPath)
+        }
     }
     return vm
 }
